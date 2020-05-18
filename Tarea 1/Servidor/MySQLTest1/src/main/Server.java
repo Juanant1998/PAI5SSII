@@ -16,7 +16,7 @@ public class Server {
 // espera conexiones del cliente y comprueba login
 ServerSocketFactory socketFactory = (ServerSocketFactory) ServerSocketFactory.getDefault(); 
 
-// crea Socket de la factoría
+// crea Socket de la factorï¿½a
 ServerSocket serverSocket = (ServerSocket) socketFactory.createServerSocket(8088);
 
 while (true) {
