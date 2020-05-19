@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-     tools:context="com.example.myapplication.MainActivity">
-
+    tools:context="com.example.myapplication.MainActivity">
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
@@ -20,32 +19,13 @@
         android:layout_below="@+id/title"
         android:layout_marginTop="20sp"
         android:layout_marginLeft="10sp"
-        android:text="ID Usuario:" />
+        android:text="Votacion: " />
     <EditText
-        android:id="@+id/idUserIn"
+        android:id="@+id/voto"
         android:layout_width="100sp"
         android:layout_height="50sp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/textView2"
-        android:layout_marginTop="10sp"
-        android:textSize="30sp"
-        android:inputType="number"
-        />
-    <TextView
-        android:id="@+id/textView3"
-        android:textSize="40sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/idUserIn"
-        android:layout_marginTop="20sp"
-        android:layout_marginLeft="10sp"
-        android:text="ID Votacion:" />
-    <EditText
-        android:id="@+id/idVotationIn"
-        android:layout_width="100sp"
-        android:layout_height="50sp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/textView3"
         android:layout_marginTop="10sp"
         android:textSize="30sp"
         android:inputType="number"
@@ -55,12 +35,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Enviar"
-        android:id="@+id/button_send"
+        android:id="@+id/vot_send"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginRight="35dp"
         android:layout_marginEnd="35dp"
         android:layout_marginBottom="35dp" />
-
 </RelativeLayout>

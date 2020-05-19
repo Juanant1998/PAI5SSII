@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -28,14 +31,11 @@ import javax.net.SocketFactory;
 public class MainActivity extends AppCompatActivity {
 
     // Setup Server information
-    protected static String server = "192.168.1.133";
-    protected static int port = 7070;
+    protected static String server = "192.168.1.105";
+    protected static int port = 8088;
 
-    String idUsuario;
-    EditText idUsuarioInput;
-
-    String idVotacion;
-    EditText idVotacionInput;
+    EditText idUser;
+    EditText idVotation;
 
     public static KeyPair getRSAKeyPair() throws NoSuchAlgorithmException {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
@@ -49,9 +49,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        idUsuario = (EditText) findViewById(R.id.idUsuarioInput);
-        idVotacion = (EditText) findViewById(R.id.idVotacionInput);
-
+        idUser = (EditText) findViewById(R.id.idUserIn);
+        idVotation = (EditText) findViewById(R.id.idVotationIn);
         // Capturamos el boton de Enviar
         View button = findViewById(R.id.button_send);
 
@@ -62,16 +61,12 @@ public class MainActivity extends AppCompatActivity {
                 showDialog();
             }
         });
+
+
     }
 
-    // Creación de un cuadro de dialogo para confirmar datos
+    // Creación de un cuadro de dialogo para confirmar pedido
     private void showDialog() throws Resources.NotFoundException {
-        CheckBox sabanas = (CheckBox) findViewById(R.id.checkBox_sabanas);
-
-        if (!sabanas.isChecked()) {
-            // Mostramos un mensaje emergente;
-            Toast.makeText(getApplicationContext(), "Selecciona al menos un elemento", Toast.LENGTH_SHORT).show();
-        } else {
             new AlertDialog.Builder(this)
                     .setTitle("Enviar")
                     .setMessage("Se va a proceder al envio")
@@ -80,21 +75,14 @@ public class MainActivity extends AppCompatActivity {
 
                                 // Catch ok button and send information
                                 public void onClick(DialogInterface dialog, int whichButton) {
-                                    if (android.os.Build.VERSION.SDK_INT > 9)
-                                    {
-                                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                                        StrictMode.setThreadPolicy(policy);
-                                    }
 
                                     // 1. Extraer los datos de la vista
-
-                                    idUsuario = idUsuarioInput.getText().toString();
-                                    idVotacion = idVotacionInput.getText().toString();
-
-                                    String mensaje = idUsuario+", "+idVotacion;
-
+                                    Integer user = Integer.parseInt(idUser.getText().toString());
+                                    Integer votation = Integer.parseInt(idVotation.getText().toString());
+                                    String mensaje = user + "," + votation;
+                                    String mensajeenviar = "";
+                                    Integer token = 0;
                                     // 2. Firmar los datos
-
                                     try{
 
                                         KeyPair kp = getRSAKeyPair();
@@ -108,36 +96,40 @@ public class MainActivity extends AppCompatActivity {
 
                                         String firmaMensaje = Base64.encodeToString(firma, Base64.DEFAULT);
 
-                                        String mensajeenviar = mensaje+"/"+firmaMensaje;
-                                    }
-
-                                    catch(Exception e){
+                                        mensajeenviar = mensaje+"/"+firmaMensaje;
+                                    }catch(Exception e){
                                         e.printStackTrace();
                                     }
 
                                     // 3. Enviar los datos
-
                                     try {
-
+                                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                                                .permitAll().build();
+                                        StrictMode.setThreadPolicy(policy);
                                         SocketFactory socketFactory = (SocketFactory) SocketFactory.getDefault();
 
-                                        Socket socket = (Socket) socketFactory.createSocket("192.168.1.134", 8088);
-
+                                        Socket socket = (Socket) socketFactory.createSocket(server, port);
+                                        BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                                         PrintWriter output = new PrintWriter(new OutputStreamWriter(
                                                 socket.getOutputStream()));
 
                                         output.println(mensajeenviar);
                                         output.flush();
-
-
+                                        token = Integer.valueOf(input.readLine());
+                                        System.out.println(token);
                                         output.close();
+                                        input.close();
                                         socket.close();
 
                                     } catch (Exception ioException) {
                                         ioException.printStackTrace();
                                     }
-
-                                    Toast.makeText(MainActivity.this, "Datos enviados correctamente", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "Datos enviados correctamente, token: " + token, Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(MainActivity.this, Votation.class);
+                                    intent.putExtra("token", token);
+                                    intent.putExtra("votation", votation);
+                                    intent.putExtra("user", user);
+                                    startActivity(intent);
                                 }
                             }
 
@@ -150,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
                             show();
         }
-    }
+
 
 
 }
