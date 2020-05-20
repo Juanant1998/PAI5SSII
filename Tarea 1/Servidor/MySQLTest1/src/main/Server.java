@@ -102,6 +102,13 @@ while (true) {
 		byte[] firma = Hex.decode(str_firma.getBytes(Charset.forName("UTF-8")));
 		
 		// originalSigBytes will be the same as sig
+		MySQLAccess dao = new MySQLAccess();
+
+		//Verifico que puedo tener más conexiones en el día
+		boolean overload = dao.checkSobrecarga();
+		
+		System.out.println("OV: " + overload);
+		if (!overload) {
 		
 		boolean verified = verificaFirmaDigital (values, firma, str_firma);
 		
@@ -112,15 +119,18 @@ while (true) {
 			Integer camas = Integer.parseInt(allvalues[3]);
 			Integer usuario = Integer.parseInt(allvalues[4]);
 						
-			MySQLAccess dao = new MySQLAccess();
 		    //dao.readDataBase();
 		    dao.insertPedido(mesas, sillas, sillones, camas, usuario, verified);
-		    
+			dao.generaLog();
+
+		} else {
+			System.out.println("Demasiados intentos");
+		}
+		
 		output.close();
 		input.close();
 		socket.close();
 		
-		dao.generaLog();
 
 	} catch (IOException ioException) {
 		ioException.printStackTrace();

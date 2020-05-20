@@ -75,85 +75,112 @@ public class MySQLAccess {
   }
   
   public void generaLog() throws Exception {
- Class.forName("com.mysql.jdbc.Driver");
-      
-      // Setup the connection with the DB
-      connect = DriverManager
-          .getConnection("jdbc:mysql://" + host + "/pai5?"
-              + "user=" + user + "&password=" + passwd );
+	  Class.forName("com.mysql.jdbc.Driver");
+	       
+	       // Setup the connection with the DB
+	       connect = DriverManager
+	           .getConnection("jdbc:mysql://" + host + "/pai5?"
+	               + "user=" + user + "&password=" + passwd );
 
-      // Statements allow to issue SQL queries to the database
-      statement = connect.createStatement();
-      // Result set get the result of the SQL query
-      resultSet = statement
-          .executeQuery("SELECT * FROM pai5.pedidos\r\n" + 
-          		"WHERE YEAR(fecha) = YEAR(CURRENT_DATE - INTERVAL 0 MONTH)\r\n" + 
-          		"AND MONTH(fecha) = MONTH(CURRENT_DATE - INTERVAL 0 MONTH)");
-      double tact = calculaTendencia (resultSet); 
-      
-      resultSet = statement
-             .executeQuery("SELECT * FROM pai5.pedidos\r\n" + 
-             		"WHERE YEAR(fecha) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH)\r\n" + 
-             		"AND MONTH(fecha) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH)");
-      double tm1 = calculaTendencia (resultSet); 
-          
+	       // Statements allow to issue SQL queries to the database
+	       statement = connect.createStatement();
+	       // Result set get the result of the SQL query
+	       resultSet = statement
+	           .executeQuery("SELECT * FROM pai5.pedidos\r\n" + 
+	           		"WHERE YEAR(fecha) = YEAR(CURRENT_DATE - INTERVAL 0 MONTH)\r\n" + 
+	           		"AND MONTH(fecha) = MONTH(CURRENT_DATE - INTERVAL 0 MONTH)");
+	       double tact = calculaTendencia (resultSet); 
+	       
+	       resultSet = statement
+	              .executeQuery("SELECT * FROM pai5.pedidos\r\n" + 
+	              		"WHERE YEAR(fecha) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH)\r\n" + 
+	              		"AND MONTH(fecha) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH)");
+	       double tm1 = calculaTendencia (resultSet); 
+	           
 
 
-      resultSet = statement
-              .executeQuery("SELECT * FROM pai5.pedidos\r\n" + 
-               		"WHERE YEAR(fecha) = YEAR(CURRENT_DATE - INTERVAL 2 MONTH)\r\n" + 
-               		"AND MONTH(fecha) = MONTH(CURRENT_DATE - INTERVAL 2 MONTH)");
-      
-      
-      double tm2 = calculaTendencia (resultSet); 
-      System.out.println("Actual: " + tact);
-      System.out.println("-1: " + tm1);
-      System.out.println("-2: " + tm2);
+	       resultSet = statement
+	               .executeQuery("SELECT * FROM pai5.pedidos\r\n" + 
+	                		"WHERE YEAR(fecha) = YEAR(CURRENT_DATE - INTERVAL 2 MONTH)\r\n" + 
+	                		"AND MONTH(fecha) = MONTH(CURRENT_DATE - INTERVAL 2 MONTH)");
+	       
+	       
+	       double tm2 = calculaTendencia (resultSet); 
+	       System.out.println("Actual: " + tact);
+	       System.out.println("-1: " + tm1);
+	       System.out.println("-2: " + tm2);
 
-      String tendencia = "";
-      
-      if ((tact > tm1 && tact > tm2) || (tact > tm1 && tact == tm2) || (tact == tm1 && tact > tm2)) {
-    	  tendencia = "POSITIVA";
-      } else if ((tact < tm1) || (tact < tm2)) {
-    	  tendencia = "NEGATIVA";
-      } else {
-    	  tendencia = "NULA";
-      }
-      
-      resultSet = statement
-              .executeQuery("SELECT * FROM pai5.pedidos ORDER BY id DESC LIMIT 0, 1");
-      
-      System.out.println(tendencia);
-      
+	       String tendencia = "";
+	       
+	       if ((tact > tm1 && tact > tm2) || (tact > tm1 && tact == tm2) || (tact == tm1 && tact > tm2)) {
+	     	  tendencia = "POSITIVA";
+	       } else if ((tact < tm1) || (tact < tm2)) {
+	     	  tendencia = "NEGATIVA";
+	       } else {
+	     	  tendencia = "NULA";
+	       }
+	       
+	       resultSet = statement
+	               .executeQuery("SELECT * FROM pai5.pedidos ORDER BY id DESC LIMIT 0, 1");
+	       
+	       System.out.println(tendencia);
+	       
 
-      while(resultSet.next()) {
+	       while(resultSet.next()) {
 
-    	  Integer id = resultSet.getInt("ID");
-	      String usuario = resultSet.getString("usuario");
-	      String camas = resultSet.getString("camas");
-	      String sillas = resultSet.getString("sillas");
-	      Date date = resultSet.getDate("fecha");
-	      String sillones = resultSet.getString("sillones");
-	      String mesas = resultSet.getString("mesas");
-	      Boolean accepted = resultSet.getBoolean("accepted");
-          PrintWriter writer = new PrintWriter("LOG - P" + id + " - " + date + ".txt", "UTF-8");
+	     	  Integer id = resultSet.getInt("ID");
+	 	      String usuario = resultSet.getString("usuario");
+	 	      String camas = resultSet.getString("camas");
+	 	      String sillas = resultSet.getString("sillas");
+	 	      Date date = resultSet.getDate("fecha");
+	 	      String sillones = resultSet.getString("sillones");
+	 	      String mesas = resultSet.getString("mesas");
+	 	      Boolean accepted = resultSet.getBoolean("accepted");
+	           PrintWriter writer = new PrintWriter("LOG - P" + id + " - " + date + ".txt", "UTF-8");
 
-	      writer.println("///////PEDIDO NUMERO "+ id+ "///////////");
-	      writer.println("TENDENCIA ACTUAL: " + tendencia);
-	      writer.println("ULTIMO PEDIDO: ");
-	      writer.println("	Usuario: " + usuario);
-	      writer.println("	Fecha: " + date);
-	      writer.println("	Camas: " + camas);
-	      writer.println("	Sillas: " + sillas);
-	      writer.println("	Sillones: " + sillones);
-	      writer.println("	Mesas: " + mesas);
-	      writer.println("	Aprobado: " + accepted);
-	      writer.println("//////////");
-	      writer.close();
+	 	      writer.println("///////PEDIDO NUMERO "+ id+ "///////////");
+	 	      writer.println("TENDENCIA ACTUAL: " + tendencia);
+	 	      writer.println("ULTIMO PEDIDO: ");
+	 	      writer.println("	Usuario: " + usuario);
+	 	      writer.println("	Fecha: " + date);
+	 	      writer.println("	Camas: " + camas);
+	 	      writer.println("	Sillas: " + sillas);
+	 	      writer.println("	Sillones: " + sillones);
+	 	      writer.println("	Mesas: " + mesas);
+	 	      writer.println("	Aprobado: " + accepted);
+	 	      writer.println("//////////");
+	 	      writer.close();
 
-	      
-      }
-  }
+	 	      
+	       }
+	   }
+  
+  public boolean checkSobrecarga() throws Exception {
+	  Class.forName("com.mysql.jdbc.Driver");
+	       
+	       // Setup the connection with the DB
+	       connect = DriverManager
+	           .getConnection("jdbc:mysql://" + host + "/pai5?"
+	               + "user=" + user + "&password=" + passwd );
+
+	       // Statements allow to issue SQL queries to the database
+	       statement = connect.createStatement();
+	       // Result set get the result of the SQL query
+	       resultSet = statement
+	           .executeQuery("SELECT * FROM pai5.pedidos\r\n" + 
+	           		"WHERE hora >= DATE_SUB(NOW(), INTERVAL 4 HOUR)");
+	       
+	       int counter = 0;
+	       while (resultSet.next()) {
+	    	   counter++;
+	       }
+	       
+	       if (counter >= 3) {
+	    	   return true;
+	       } else {
+	    	   return false;
+	       }
+	   }
   
    
   private double calculaTendencia(ResultSet resultSet) throws SQLException {
@@ -177,7 +204,8 @@ public class MySQLAccess {
 	      // This will load the MySQL driver, each DB has its own driver
 	      Class.forName("com.mysql.jdbc.Driver");
 	      java.sql.Date sqlDate = new java.sql.Date(new Date().getTime());
-	      
+	      java.sql.Timestamp date = new java.sql.Timestamp(new java.util.Date().getTime());
+
 	      // Setup the connection with the DB
 	      connect = DriverManager
 	          .getConnection("jdbc:mysql://" + host + "/pai5?"
@@ -185,7 +213,7 @@ public class MySQLAccess {
 
 	      // PreparedStatements can use variables and are more efficient
 	      preparedStatement = connect
-	          .prepareStatement("insert into  pai5.pedidos values (default, ?, ?, ?, ? , ?, ?, ?)");
+	          .prepareStatement("insert into  pai5.pedidos values (default, ?, ?, ?, ? , ?, ?, ?, ?)");
 
 	      preparedStatement.setInt(1, usuario);
 	      preparedStatement.setInt(2, mesas);
@@ -193,7 +221,8 @@ public class MySQLAccess {
 	      preparedStatement.setInt(4, camas);
 	      preparedStatement.setInt(5, sillones);
 	      preparedStatement.setDate(6, sqlDate);
-	      preparedStatement.setBoolean(7, verified);
+	      preparedStatement.setTimestamp(7, date);
+	      preparedStatement.setBoolean(8, verified);
 	      preparedStatement.executeUpdate();
 
 	     	      
