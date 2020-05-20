@@ -97,7 +97,6 @@ while (true) {
 		socket.getOutputStream()));
 		String values = input.readLine();
 		String str_firma = input.readLine();
-		String str_pubkey = input.readLine();
 		
 	
 		byte[] firma = Hex.decode(str_firma.getBytes(Charset.forName("UTF-8")));
@@ -106,7 +105,6 @@ while (true) {
 		
 		boolean verified = verificaFirmaDigital (values, firma, str_firma);
 		
-		if (verified) {
 			String[] allvalues = values.split(",");
 			Integer mesas = Integer.parseInt(allvalues[0]);
 			Integer sillas = Integer.parseInt(allvalues[1]);
@@ -116,17 +114,13 @@ while (true) {
 						
 			MySQLAccess dao = new MySQLAccess();
 		    //dao.readDataBase();
-		    dao.insertPedido(mesas, sillas, sillones, camas, usuario);
+		    dao.insertPedido(mesas, sillas, sillones, camas, usuario, verified);
 		    
-		    
-		} else {
-			System.out.println("ERROR");
-		}
-		
-
 		output.close();
 		input.close();
 		socket.close();
+		
+		dao.generaLog();
 
 	} catch (IOException ioException) {
 		ioException.printStackTrace();

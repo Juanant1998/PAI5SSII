@@ -16,6 +16,8 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.Hex;
+
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -42,12 +44,8 @@ import javax.net.SocketFactory;
 public class MainActivity extends AppCompatActivity {
 
     // Setup Server information
-    protected static String server = "192.168.1.133";
-    protected static int port = 7070;
-
-    protected static String stpubk = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCcuCS1exSLyjwK7fH2rRSeJ5nf7gwcBmGWOopWxoOHMuEhI6jbAhJ4SBZtRC0shm332FrobNbiNM58Z0M2PBrCwrbKRs6wcXh1RWTDXJNz/h925J6UKUotPqE7fBuJvAWs7aT9cYqgqnwaZ8J9/o2RnPyw3r5gZcUOXPhJ/D10kQIDAQAB";
-    protected static String stprivk = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJy4JLV7FIvKPArt8fatFJ4nmd/uDBwGYZY6ilbGg4cy4SEjqNsCEnhIFm1ELSyGbffYWuhs1uI0znxnQzY8GsLCtspGzrBxeHVFZMNck3P+H3bknpQpSi0+oTt8G4m8BaztpP1xiqCqfBpnwn3+jZGc/LDevmBlxQ5c+En8PXSRAgMBAAECgYEAivdaTbaK/H3iigp+cS7+xlL1RjSudjdOV0knnFTBEqSSLrGRLEqFGDVL9a3rpLy7THeD/O9uB/2tT3C9j5zyWHVHfPaxpF1j3351300TsXCdKaKsNt50awSnKs1hqY7f6LmKm9XC8zp+QBIu68FwFz2h4B8SffZLm4vuHZm7Z+UCQQDh3pKQ+/S0o6uKO+jed6ld4YjkAUoO5n2R879dzsmBu/XPbjZ/MP1EWJddHs630OAvOBnXLaMhajRJ+Uj1itDHAkEAsaAZO/Rrc9g5foUu77JqpfUMfditmcKpFYH1mBIs0XNgjJtpmmEI4B3scE/Kx+cm4/oR/zA5tNJiLxyVKS1n5wJAMFi/7qC/xFq0QSaJtfTPH/VCo+tSutXDUxZlg+LbZxWgjAH/UEJgM9zyqVAK13WyRukvPsvZ+zEMeDkP0N8hyQJAUxDDvD35YhtkB77QzFdreGC4jsGdraJS4DP+XjdhrjF+nUKwh/mI5QYZZAxskD+Q+Fwhvm0XD3CzacS8HJ2XUQJAQwkz6MfijeuiAJNZ4S/16vV6RiTQgpFcdr6qLVaR5s6llHxKm3Rlj//qWJri4gJMebmCk3a5u9yQL3ujRkXNww==";
-
+    protected static String server = "192.168.1.134";
+    protected static int port = 8088;
 
     @IntRange(from=1,to=300)
     int camas;
@@ -110,9 +108,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         camasInput = (EditText) findViewById(R.id.camasInput);
+        camasInput.setFilters(new InputFilter[]{new InputFilterMinMax("0", "300")});
         mesasInput = (EditText) findViewById(R.id.mesasInput);
+        mesasInput.setFilters(new InputFilter[]{new InputFilterMinMax("0", "300")});
         sillasInput = (EditText) findViewById(R.id.sillasInput);
+        sillasInput.setFilters(new InputFilter[]{new InputFilterMinMax("0", "300")});
         sillonesInput = (EditText) findViewById(R.id.sillonesInput);
+        sillonesInput.setFilters(new InputFilter[]{new InputFilterMinMax("0", "300")});
         userInput = (EditText) findViewById(R.id.userInput);
         // Capturamos el boton de Enviar
         View button = findViewById(R.id.button_send);
@@ -126,6 +128,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+    protected boolean isEmpty(EditText editText) {
+        return (editText.getText().toString().equals(""));
     }
 
     // Creación de un cuadro de dialogo para confirmar pedido
@@ -155,11 +160,37 @@ public class MainActivity extends AppCompatActivity {
 
                                     // 1. Extraer los datos de la vista
 
-                                    camas = Integer.parseInt(camasInput.getText().toString());
-                                    sillas = Integer.parseInt(sillasInput.getText().toString());
-                                    mesas = Integer.parseInt(mesasInput.getText().toString());
-                                    sillones = Integer.parseInt(sillonesInput.getText().toString());
-                                    user = Integer.parseInt(userInput.getText().toString());
+                                    if(isEmpty(camasInput)){
+                                        camas = 0;
+                                    } else {
+                                        camas = Integer.parseInt(camasInput.getText().toString());
+
+                                    }
+                                    if(isEmpty(sillasInput)){
+                                        sillas = 0;
+                                    } else {
+                                        sillas = Integer.parseInt(sillasInput.getText().toString());
+
+                                    }
+                                    if(isEmpty(sillonesInput)){
+                                        sillones = 0;
+                                    } else {
+                                        sillones = Integer.parseInt(sillonesInput.getText().toString());
+
+                                    }
+                                    if(isEmpty(mesasInput)){
+                                        mesas = 0;
+                                    } else {
+                                        mesas = Integer.parseInt(mesasInput.getText().toString());
+
+                                    }
+
+                                    if(isEmpty(userInput)){
+                                        user = 0;
+                                    } else {
+                                        user = Integer.parseInt(userInput.getText().toString());
+
+                                    }
 
                                     mensaje = camas  + "," + sillas + "," + sillones + "," + mesas + "," + user + "";
 
@@ -194,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
                                         SocketFactory socketFactory = (SocketFactory) SocketFactory.getDefault();
 
-                                        Socket socket = (Socket) socketFactory.createSocket("192.168.1.134", 8088);
+                                        Socket socket = (Socket) socketFactory.createSocket(server, port);
 
                                         PrintWriter output = new PrintWriter(new OutputStreamWriter(
                                                 socket.getOutputStream()));

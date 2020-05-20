@@ -38,18 +38,18 @@ public class test {
         return privKey;
 	}
 	
-	public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException {
-
-		PublicKey pub = test1();
-		PrivateKey priv = test2();
-		
-
-
-        Signature sg = Signature.getInstance("SHA256withRSA");
-        sg.initSign(priv);
-
-        sg.update("1234".getBytes());
-        byte[] firma = sg.sign();
+	public static void main(String[] args) throws Exception {
+//
+//		PublicKey pub = test1();
+//		PrivateKey priv = test2();
+//		
+//
+//
+//        Signature sg = Signature.getInstance("SHA256withRSA");
+//        sg.initSign(priv);
+//
+//        sg.update("1234".getBytes());
+//        byte[] firma = sg.sign();
 //        
 //
 //		Signature firma2= Signature.getInstance("SHA256withRSA");
@@ -74,15 +74,18 @@ public class test {
 //      
 //      System.out.println(pub);
 //      System.out.println(priv);
-
-        byte[] hexEncodedArray = Hex.encode(firma);
-        String humanReadableString = new String(hexEncodedArray, Charset.forName("UTF-8"));
-        
-        byte[] originalSigBytes = Hex.decode(humanReadableString.getBytes(Charset.forName("UTF-8")));
-     // originalSigBytes will be the same as sig
-        
-        boolean test = Arrays.equals(firma, originalSigBytes);
-        System.out.println(test);
+//
+//        byte[] hexEncodedArray = Hex.encode(firma);
+//        String humanReadableString = new String(hexEncodedArray, Charset.forName("UTF-8"));
+//        
+//        byte[] originalSigBytes = Hex.decode(humanReadableString.getBytes(Charset.forName("UTF-8")));
+//     // originalSigBytes will be the same as sig
+//        
+//        boolean test = Arrays.equals(firma, originalSigBytes);
+//        System.out.println(test);
+		
+		MySQLAccess dao = new MySQLAccess();
+		dao.generaLog();
 	}
 
 }
