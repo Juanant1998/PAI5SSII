@@ -311,10 +311,6 @@ public class MySQLAccess_T2 {
 
   public Integer getToken(String idUser, String idVotacion) throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.jdbc.Driver");
-	    
-		Integer id1 = Integer.valueOf(idUser);
-		Integer id2 = Integer.valueOf(idVotacion);
-		System.out.println(id1 + "," + id2);
 	    // Setup the connection with the DB
 	    connect = DriverManager
 	        .getConnection("jdbc:mysql://" + host + "/pai5?"
@@ -324,7 +320,7 @@ public class MySQLAccess_T2 {
 	    statement = connect.createStatement();
 	    // Result set get the result of the SQL query
 	    resultSet = statement
-	        .executeQuery("SELECT token FROM pai5.censo WHERE censo.usuario =" + id1 +  " AND censo.votacion =" + id2 + " ;");
+	        .executeQuery("SELECT token FROM pai5.censo WHERE censo.usuario =" + idUser +  " AND censo.votacion =" + idVotacion + " ;");
 
 	    Integer token = -1;
 	    while (resultSet.next()) {
@@ -370,5 +366,24 @@ public class MySQLAccess_T2 {
 		
 		return res;
 	}
+  
+  public void insertVoto(String idVotacion, String voto) throws ClassNotFoundException, SQLException {
+	  Class.forName("com.mysql.jdbc.Driver");
+	    // Setup the connection with the DB
+	    connect = DriverManager
+	        .getConnection("jdbc:mysql://" + host + "/pai5?"
+	            + "user=" + user + "&password=" + passwd );
+
+	    // Statements allow to issue SQL queries to the database
+	    statement = connect.createStatement();
+	    preparedStatement = connect
+	            .prepareStatement("insert into  pai5.votos values (default, ?, ?)");
+	        // "myuser, webpage, datum, summary, COMMENTS from pai5.comments");
+	        // Parameters start with 1
+	        preparedStatement.setString(1, idVotacion);
+	        preparedStatement.setString(2, voto);
+	        preparedStatement.executeUpdate();
+
+  }
 
 }
