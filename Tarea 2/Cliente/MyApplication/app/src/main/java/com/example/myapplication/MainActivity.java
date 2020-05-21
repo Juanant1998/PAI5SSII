@@ -31,7 +31,7 @@ import javax.net.SocketFactory;
 public class MainActivity extends AppCompatActivity {
 
     // Setup Server information
-    protected static String server = "192.168.1.105";
+    protected static String server = "192.168.1.134";
     protected static int port = 8088;
 
     EditText idUser;
@@ -109,27 +109,44 @@ public class MainActivity extends AppCompatActivity {
                                         SocketFactory socketFactory = (SocketFactory) SocketFactory.getDefault();
 
                                         Socket socket = (Socket) socketFactory.createSocket(server, port);
-                                        BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                                         PrintWriter output = new PrintWriter(new OutputStreamWriter(
                                                 socket.getOutputStream()));
 
                                         output.println(mensajeenviar);
                                         output.flush();
-                                        token = Integer.valueOf(input.readLine());
-                                        System.out.println(token);
-                                        output.close();
-                                        input.close();
-                                        socket.close();
+                                        BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                                        String tokenaux = input.readLine();
 
-                                    } catch (Exception ioException) {
-                                        ioException.printStackTrace();
-                                    }
-                                    Toast.makeText(MainActivity.this, "Datos enviados correctamente, token: " + token, Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(MainActivity.this, Votation.class);
-                                    intent.putExtra("token", token);
-                                    intent.putExtra("votation", votation);
-                                    intent.putExtra("user", user);
-                                    startActivity(intent);
+                                        if (tokenaux.contains("encontrar")){
+                                            Toast.makeText(MainActivity.this, "No se ha podido encontrar un token para esa combinación", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            token = Integer.valueOf(tokenaux);
+                                            System.out.println(token);
+
+                                            String titulo = input.readLine();
+
+                                            String op1 = input.readLine();
+
+                                            String op2 = input.readLine();
+
+                                            output.close();
+                                            input.close();
+                                            socket.close();
+
+
+                                            Toast.makeText(MainActivity.this, "Datos enviados correctamente, token: " + token, Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(MainActivity.this, Votation.class);
+                                            intent.putExtra("token", token);
+                                            intent.putExtra("titulo", titulo);
+                                            intent.putExtra("op1", op1);
+                                            intent.putExtra("op2", op2);
+                                            intent.putExtra("votation", votation);
+                                            intent.putExtra("user", user);
+                                            startActivity(intent);
+                                        }
+                                        } catch (Exception ioException) {
+                                            ioException.printStackTrace();
+                                        }
                                 }
                             }
 

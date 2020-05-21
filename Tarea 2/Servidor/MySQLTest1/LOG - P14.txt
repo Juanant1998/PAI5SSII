@@ -1,0 +1,11 @@
+///////PEDIDO NUMERO 14///////////
+TENDENCIA ACTUAL: NULA
+ULTIMO PEDIDO: 
+	Usuario: 0
+	Fecha: 2020-05-20 17:41:50.0
+	Camas: 0
+	Sillas: 0
+	Sillones: 0
+	Mesas: 0
+	Aprobado: true
+//////////

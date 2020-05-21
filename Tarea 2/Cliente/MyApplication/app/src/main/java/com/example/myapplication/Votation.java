@@ -11,6 +11,7 @@ import android.os.StrictMode;
 import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -31,12 +32,18 @@ public class Votation extends AppCompatActivity {
     int user;
     int token;
     int votation;
+    String titulo;
+    String op1;
+    String op2;
 
     // Setup Server information
-    protected static String server = "192.168.1.105";
+    protected static String server = "192.168.1.134";
     protected static int port = 8088;
 
     EditText voto;
+    TextView txt;
+    TextView opcion1;
+    TextView opcion2;
 
     public static KeyPair getRSAKeyPair() throws NoSuchAlgorithmException {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
@@ -52,8 +59,21 @@ public class Votation extends AppCompatActivity {
 
         voto = (EditText) findViewById(R.id.voto);
         user = getIntent().getIntExtra("user", 0);
+        titulo = getIntent().getStringExtra("titulo");
+        op1 = getIntent().getStringExtra("op1");
+        op2 = getIntent().getStringExtra("op2");
         token = getIntent().getIntExtra("token", 0);
         votation = getIntent().getIntExtra("votation", 0);
+
+        txt = findViewById(R.id.textViewTitulo);
+        txt.setText(titulo);
+
+        opcion1 = findViewById(R.id.textViewOp1);
+        opcion1.setText(op1);
+
+        opcion2 = findViewById(R.id.textViewOp2);
+        opcion2.setText(op2);
+
         // Capturamos el boton de Enviar
         View button = findViewById(R.id.vot_send);
 
