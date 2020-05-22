@@ -6,20 +6,29 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
 
-import javax.net.ServerSocketFactory;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
 
 public class ServerPresidente {
 
+	private static final String[]	protocols		= new String[] {
+		"TLSv1.3"
+	};
+	private static final String[]	cipher_suites	= new String[] {
+		"TLS_AES_128_GCM_SHA256"
+	};
+
+
 	public static void main(final String[] args) throws Exception {
 		// espera conexiones del cliente y comprueba login
-		ServerSocketFactory socketFactory = ServerSocketFactory.getDefault();
+		SSLServerSocketFactory socketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 
-		// crea Socket de la factor
-		ServerSocket serverSocket = socketFactory.createServerSocket(8088);
+		SSLServerSocket serverSocket = (SSLServerSocket) socketFactory.createServerSocket(8088);
+		serverSocket.setEnabledProtocols(ServerPresidente.protocols);
+		serverSocket.setEnabledCipherSuites(ServerPresidente.cipher_suites);
 		while (true) {
 
 			try {
@@ -41,19 +50,18 @@ public class ServerPresidente {
 				String idVotacion = sp2[1];
 
 				MySQLAccess_T2 dao = new MySQLAccess_T2();
-				
+
 				Integer token = dao.getToken(idUser, idVotacion);
-				
-				if (token != -1)
-				{
+
+				if (token != -1) {
 					output.println(token);
 					output.flush();
-					
-					Map <String, String> votacion = dao.getVotacion(idVotacion);
+
+					Map<String, String> votacion = dao.getVotacion(idVotacion);
 					String titulo = votacion.get("titulo");
 					String op1 = votacion.get("op1");
 					String op2 = votacion.get("op2");
-					
+
 					System.out.println(titulo);
 					output.println(titulo);
 					output.println(op1);

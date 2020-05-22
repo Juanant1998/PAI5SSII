@@ -66,7 +66,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginStart="114dp"
         android:layout_marginLeft="114dp"
-        android:layout_marginTop="424dp"
+        android:layout_marginTop="324dp"
         android:text="Tu opción:"
         android:textSize="40sp" />
 
@@ -91,7 +91,23 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="100dp"
         android:layout_marginLeft="100dp"
-        android:layout_marginTop="525dp"
+        android:layout_marginTop="425dp"
         android:ems="10"
         android:inputType="textPersonName" />
+    <TextView
+        android:id="@+id/textViewTitulo5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/voto"
+        android:layout_centerHorizontal="true"
+        android:text="Token:"
+        android:textSize="40sp" />
+    <EditText
+        android:id="@+id/token"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewTitulo5"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:inputType="number" />
 </RelativeLayout>

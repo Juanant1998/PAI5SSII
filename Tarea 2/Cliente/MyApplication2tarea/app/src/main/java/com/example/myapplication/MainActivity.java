@@ -26,14 +26,22 @@ import java.security.PrivateKey;
 import java.security.Signature;
 
 import javax.net.SocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
 
 public class MainActivity extends AppCompatActivity {
 
     // Setup Server information
-    protected static String server = "192.168.1.134";
+    protected static String server = "192.168.1.105";
     protected static int port = 8088;
 
+    private static final String[]	protocols		= new String[] {
+            "TLSv1.2"
+    };
+    private static final String[]	cipher_suites	= new String[] {
+            "TLS_AES_128_GCM_SHA256"
+    };
     EditText idUser;
     EditText idVotation;
 
@@ -106,9 +114,14 @@ public class MainActivity extends AppCompatActivity {
                                         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                                                 .permitAll().build();
                                         StrictMode.setThreadPolicy(policy);
-                                        SocketFactory socketFactory = (SocketFactory) SocketFactory.getDefault();
+                                        SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
 
-                                        Socket socket = (Socket) socketFactory.createSocket(server, port);
+                                        SSLSocket socket = (SSLSocket) socketFactory.createSocket(server, port);
+
+                                        socket.setEnabledProtocols(protocols);
+                                        socket.setEnabledCipherSuites(cipher_suites);
+
+
                                         PrintWriter output = new PrintWriter(new OutputStreamWriter(
                                                 socket.getOutputStream()));
 
